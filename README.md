@@ -22,6 +22,13 @@ files.
   hardware. Kodak's own `ReadmeF135.txt` / `ReadmeF235.txt` / `ReadmeF335.txt`
   describe the file naming and which files each model uses.
   `FirmwareLoader.exe` is Kodak's loader utility.
+- `drivers/` — the Windows USB driver folders, kept as the F-X35 installer
+  laid them out under `Program Files\Pakon\`: `F-135/F135Driver`,
+  `F-335/F335Driver`, `F235Driver` and `FX35Driver`. Besides the `.sys` and
+  `.inf` driver files these hold the stage-1 loader `F235Ldr.sys` and the
+  USB bridge firmware (`Pakon*.hex`), which open-source clients need to
+  boot the scanner. `drivers/SOURCES.md` records where each file came from;
+  every file was checked against two other copies.
 - `docs/Service Manuals/` — F-135, F-235, F-335 service manuals and the
   F-235 / F-335 disassembly manuals. Where several editions of a manual
   circulate, the best available copy is at the top level and earlier
@@ -45,7 +52,6 @@ Copies of the following are sought. Open an issue if you can provide one.
 
 - Original installers: TLX Client Demo, PSI, TLX, F-X35 COM Server
 - Service and calibration tools (DxPots, film track utilities)
-- Windows driver packages
 - Pakon software for the F-K35 or other models not listed here
 
 These materials are © Kodak / Pakon. They are preserved here solely to keep
