@@ -36,11 +36,18 @@ SECTIONS = [
      " Server. The scanner loads firmware into RAM over USB at every"
      " power-on; nothing here flashes the hardware. Kodak's own readme files"
      " describe the naming and which files each model uses."),
+    ("drivers", "USB drivers",
+     "Windows USB driver folders as installed under Program Files\\Pakon,"
+     " with the original folder names. Besides the .sys/.inf driver files"
+     " they hold the stage-1 loader (F235Ldr.sys) and the bridge firmware"
+     " (Pakon*.hex) that open-source clients need to boot the scanner."
+     ' Provenance: <a href="drivers/SOURCES.md">SOURCES.md</a>.'),
 ]
 
 # Not part of the archived payload: never checksummed, never listed.
 PAPERWORK = {"SHA256SUMS", "README.md", "index.html", ".nojekyll",
-             "generate-index.py", ".DS_Store"}
+             "generate-index.py", ".DS_Store",
+             "SOURCES.md"}
 
 HEAD = """<!DOCTYPE html>
 <html lang="en">
@@ -65,6 +72,8 @@ product line is long discontinued and the original distribution channels are
 gone; without these files, working hardware becomes unusable.</p>
 <p>All files are unmodified originals. Checksums: <a href="SHA256SUMS">SHA256SUMS</a>.
 Wanted items and more detail: see the <a href="README.md">README</a>.</p>
+<p>Source repository (for issues, the wanted list, and mirroring):
+<a href="https://github.com/pakon-archive/pakon-archive.github.io">github.com/pakon-archive/pakon-archive.github.io</a></p>
 """
 
 FOOT = """
@@ -109,9 +118,12 @@ def section(folder, title, blurb):
     rows = []
     files = [f for f in payload_files()
              if f.startswith(folder + os.sep)]
-    for rel in sorted(files, key=sort_key):
+    # Driver folders repeat the same file names, so list them by path.
+    by_path = folder == "drivers"
+    for rel in sorted(files, key=(lambda f: f.lower()) if by_path else sort_key):
         href = urllib.parse.quote(rel.replace(os.sep, "/"))
-        label = os.path.basename(rel)
+        label = (os.path.relpath(rel, folder).replace(os.sep, "/") if by_path
+                 else os.path.basename(rel))
         if os.sep + "older" + os.sep in rel:
             label += " (older edition)"
         nbytes = os.path.getsize(os.path.join(ROOT, rel))
